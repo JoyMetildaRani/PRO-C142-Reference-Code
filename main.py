@@ -32,7 +32,7 @@ def get_movie():
         "status": "success"
     })
 
-@app.route("/like")
+@app.route("/like",methods=["GET", "POST"])
 def liked_movie():
     global all_movies
     movie_data=assign_val()
@@ -52,7 +52,7 @@ def liked():
         'status' : 'success'
     })
 
-@app.route("/dislike")
+@app.route("/dislike",methods=["GET", "POST"])
 def unliked_movie():
     global all_movies
 
@@ -65,7 +65,7 @@ def unliked_movie():
         "status": "success"
     })
 
-@app.route("/did_not_watch")
+@app.route("/did_not_watch",methods=["GET", "POST"])
 def did_not_watch_view():
     global all_movies
 
@@ -78,7 +78,7 @@ def did_not_watch_view():
         "status": "success"
     })
 
-@app.route("/popular_movies")
+@app.route("/popular_movies",methods=["GET", "POST"])
 def popular_movies():
     popular_movie_data = []
 
@@ -97,15 +97,18 @@ def popular_movies():
         "status": "success"
     })
 
-@app.route("/recommended_movies")
+@app.route("/recommended_movies",methods=["GET", "POST"])
 def recommended_movies():
     global liked_movies
     col_names=['original_title', 'poster_link', 'release_date', 'runtime', 'weighted_rating']
     all_recommended = pd.DataFrame(columns=col_names)
+    lst = []
     
     for liked_movie in liked_movies:
         output = get_recommendations(liked_movie["original_title"])
-        all_recommended=all_recommended.append(output)
+        lst.append(output)
+        all_recommended = pd.concat(lst)
+
 
     all_recommended.drop_duplicates(subset=["original_title"],inplace=True)
 
